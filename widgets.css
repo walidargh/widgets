@@ -1,0 +1,28 @@
+h1 {
+  display: inline-block;
+  float: left;
+  padding: 5px;
+  margin: 10px, 10px, 10px, 10px;
+
+}
+ul{
+    list-style:none;
+    display: inline-block;
+}
+
+article {
+  position: relative;
+  left: 40px;
+}
+
+ul h1.focused {
+  color:#fff;
+  background-color:#41c7c2;
+  border-radius: 10px;
+}
+
+ul h1:hover {
+  color:#fff;
+  background-color:black;
+  border-radius: 10px;
+}
