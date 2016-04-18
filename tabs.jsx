@@ -20,14 +20,12 @@ var Tabs = React.createClass({
             if(self.state.focused === index){
                 style = 'focused';
             }
-            // Notice the use of the bind() method. It makes the
-            // index available to the clicked function: ??????????
             return <h1 className={style} onClick=
               {self.clicked.bind(self, index)}>{obj.title}</h1>;
           })
         }
         </ul>
-
+    
         <article>{this.props.items[this.state.focused].content}</article>
       </div>
     );

@@ -46,10 +46,16 @@
 
 	var React = __webpack_require__(1),
 	    ReactDOM = __webpack_require__(32),
-	    Tabs = __webpack_require__(166);
+	    Tabs = __webpack_require__(166),
+	    Clock = __webpack_require__(167),
+	    Weather = __webpack_require__(168);
 	
 	document.addEventListener("DOMContentLoaded", function () {
-	  ReactDOM.render(React.createElement(Tabs, { items: [{ title: "First Tab", content: "this is the first tab" }, { title: "Second Tab", content: "this is the second tab" }] }), document.getElementById('main'));
+	  ReactDOM.render(React.createElement(
+	    'div',
+	    { className: 'tabs-clock' },
+	    React.createElement(Tabs, { items: [{ title: "Clock", content: React.createElement(Clock, null) }, { title: "Weather", content: React.createElement(Weather, null) }] })
+	  ), document.getElementById('main'));
 	});
 
 /***/ },
@@ -20039,8 +20045,6 @@
 	          if (self.state.focused === index) {
 	            style = 'focused';
 	          }
-	          // Notice the use of the bind() method. It makes the
-	          // index available to the clicked function: ??????????
 	          return React.createElement(
 	            'h1',
 	            { className: style, onClick: self.clicked.bind(self, index) },
@@ -20058,6 +20062,99 @@
 	});
 	
 	module.exports = Tabs;
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Clock = React.createClass({
+	  displayName: "Clock",
+	
+	  getInitialState: function () {
+	    return { date: new Date() };
+	  },
+	
+	  componentDidMount: function () {
+	    var clock = this;
+	    this.interval = setInterval(function () {
+	      clock.setState({ date: new Date() });
+	    }, 1000);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      { className: "clock" },
+	      this.state.date.toString()
+	    );
+	  },
+	
+	  componentWillUnmount: function () {
+	    clearInterval(this.interval);
+	  }
+	
+	});
+	
+	module.exports = Clock;
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Weather = React.createClass({
+	  displayName: 'Weather',
+	
+	  getInitialState: function () {
+	    return { weather: "Raining Meatballs" };
+	  },
+	  getWeather: function () {
+	    navigator.geolocation.getCurrentPosition(this.AjaxResponse);
+	  },
+	  AjaxResponse: function (pos) {
+	    var self = this;
+	    var options = {
+	      type: 'GET',
+	      url: "http://api.openweathermap.org/data/2.5/find?APPID=645c5d39c7603f17e23fcaffcea1a3c1&lat=" + pos.coords.latitude + "&lon=" + pos.coords.longitude + "&cnt=1",
+	      success: function (data) {
+	        console.log("We have your weather!");
+	        console.log(data);
+	        self.setState({ weather: request.response });
+	      },
+	      error: function () {
+	        console.error("An error occured.");
+	      }
+	    };
+	    var request = new XMLHttpRequest();
+	    request.open(options.type, options.url, true);
+	    request.onload = function (e) {
+	      if (request.status == 200) {
+	        this.weather = request.response;
+	        options.success(request.response);
+	      } else {
+	        options.error(request.response);
+	      }
+	    };
+	    request.send(JSON.stringify(options.data));
+	    // return request.response
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'weather' },
+	      this.state.weather.toString()
+	    );
+	  },
+	  componentDidMount: function () {
+	    this.getWeather();
+	  }
+	});
+	
+	module.exports = Weather;
 
 /***/ }
 /******/ ]);
