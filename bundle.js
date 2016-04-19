@@ -48,15 +48,19 @@
 	    ReactDOM = __webpack_require__(32),
 	    Tabs = __webpack_require__(166),
 	    Clock = __webpack_require__(167),
-	    Weather = __webpack_require__(168);
+	    Weather = __webpack_require__(168),
+	    Autocomplete = __webpack_require__(169);
 	
 	document.addEventListener("DOMContentLoaded", function () {
 	  ReactDOM.render(React.createElement(
 	    'div',
 	    { className: 'tabs-clock' },
-	    React.createElement(Tabs, { items: [{ title: "Clock", content: React.createElement(Clock, null) }, { title: "Weather", content: React.createElement(Weather, null) }] })
+	    React.createElement(Tabs, { items: [{ title: "Clock", content: React.createElement(Clock, null) }, { title: "Weather", content: React.createElement(Weather, null) }, { title: "Autocomplete",
+	        content: React.createElement(Autocomplete, { words: dictionary }) }] })
 	  ), document.getElementById('main'));
 	});
+	
+	var dictionary = ["string", "straing", "this", "that", "something", "Snoop Dogg", "water", "Hobbit"];
 
 /***/ },
 /* 1 */
@@ -20155,6 +20159,58 @@
 	});
 	
 	module.exports = Weather;
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Autocomplete = React.createClass({
+	  displayName: "Autocomplete",
+	
+	  getInitialState: function () {
+	    return { letters: "" };
+	  },
+	
+	  handleInput: function (e) {
+	    this.setState({ letters: e.currentTarget.value });
+	  },
+	
+	  handleClick: function (e) {
+	    this.setState({ letters: e.target.innerHTML });
+	  },
+	
+	  matchWords: function () {
+	    var matchedWords = this.props.words.filter(function (word) {
+	      var slicedWord = word.slice(0, this.state.letters.length);
+	      return slicedWord === this.state.letters;
+	    }.bind(this));
+	    return matchedWords;
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement("input", { type: "text", onInput: this.handleInput, value: this.state.letters }),
+	      React.createElement(
+	        "ul",
+	        { onClick: this.handleClick },
+	        this.matchWords().map(function (word, index) {
+	          console.log(word);
+	          return React.createElement(
+	            "li",
+	            null,
+	            word
+	          );
+	        })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Autocomplete;
 
 /***/ }
 /******/ ]);
